@@ -24,18 +24,18 @@ public:
 	 ~list();
 
     // operations
-	 void          Add(T value);
-    T             FirstElement() const;
+	 T*	   		Add(T value);          //modification for Puzzle, so i can walk on course
+	 T             FirstElement() const;
 	 virtual bool  Includes(T value) const;
-    int           IsEmpty() const;
+	 int           IsEmpty() const;
 	 void          RemoveFirst();
 	 T             RemoveandReturnFirst();    //ohad & liat
 	 virtual void  Clear();
-	 T					ReturnValue(T v);             //for Puzzle usage
+	 T*				ReturnValue(T v);          //for Puzzle usage - returns POINTER(!) to T
 
 protected:
-    // data field
-    link<T> *     first;
+	 // data field
+	 link<T> *     first;
 };
 
 
@@ -49,12 +49,12 @@ template <class T> class link
 {
 public:
 	 // constructor
-    link(T linkValue, link * nextPtr);
-    link(const link &);
+	 link(T linkValue, link * nextPtr);
+	 link(const link &);
 
-    // data areas
-    T         value;
-    link *    next;
+	 // data areas
+	 T         value;
+	 link *    next;
 };
 
 
@@ -66,21 +66,21 @@ public:
 
 template <class T> class doubleEndedList : public list<T> {
 public:
-    // constructors
-    doubleEndedList ();
+	 // constructors
+	 doubleEndedList ();
 
-    // override the following methods from class list
-    virtual void    Add (T value);
+	 // override the following methods from class list
+	 virtual T*   	  Add (T value);
 	 virtual void    Clear ();
 	 virtual void    RemoveFirst ();
 	 virtual   T     RemoveandReturnFirst();  //change the "last" ptr as well
 
-    // add a new element to the end of the list
-    void        AddToEnd (T value);
+	 // add a new element to the end of the list
+	 T*		  		  AddToEnd (T value);
 
 protected:
-    // data area -- link to end
-    link<T> * last;
+	 // data area -- link to end
+	 link<T> * last;
 };
 
 
@@ -91,7 +91,7 @@ protected:
 
 template <class T> list<T>::list() : first(NULL)
 {
-    // no further initialization
+	 // no further initialization
 }
 
 
@@ -120,18 +120,19 @@ template <class T> void list<T>::Clear()
 
 
 
-template <class T> void list<T>::Add(T val)
+template <class T> T* list<T>::Add(T val)
 {
     // Add a new value to the front of a linked list
     first=new link<T>(val, first);
-    assert(first != NULL);
+	 assert(first != NULL);
+	 return &(first->value);          //return only the address of the VALUE OF first.
 }
 
 
 template <class T> T list<T>::FirstElement() const
 {
-    // return first value in list
-    assert(first != NULL);
+	 // return first value in list
+	 assert(first != NULL);
 	 return first->value;
 }
 
@@ -193,12 +194,12 @@ template <class T> T list<T>::RemoveandReturnFirst()
 }
 
 
-template <class T> T list<T>::ReturnValue(T v)
+template <class T> T* list<T>::ReturnValue(T v)
 {
 // loop to test each element
 	 for (link<T> * p=first; p!=NULL ; p=p->next)
 		  if (v == p->value)
-				return p->value;
+				return &(p->value);
 
 	 // not found
 	 return NULL;
@@ -230,19 +231,21 @@ template <class T> doubleEndedList<T>::doubleEndedList()
     last = NULL;
 }
 
-template <class T> void doubleEndedList<T>::Add(T val)
+template <class T> T* doubleEndedList<T>::Add(T val)
 {   // add an element to the front of a double ended list
     // only need to handle addition to empty list
 
     if (IsEmpty()) {
-        list<T>::Add(val);
+		  list<T>::Add(val);
 		  last=first;
         }
     else
-        list<T>::Add(val);
+		  list<T>::Add(val);
+
+	 return &(first->value);
 }
 
-template <class T> void doubleEndedList<T>::AddToEnd(T val)
+template <class T> T* doubleEndedList<T>::AddToEnd(T val)
 {
 	 // add a new element to the end of a double ended list
     // if there is an end, add to it
@@ -250,11 +253,12 @@ template <class T> void doubleEndedList<T>::AddToEnd(T val)
     if (last != NULL) {
         last->next = new link<T>(val,NULL);
 		  last = last->next;
-    }
+		  return &(last->value);
+	 }
 
 	 // otherwise, just add to front
-    else
-        Add(val);
+	 else
+		  return Add(val);   //returns first
 }
 
 template <class T> void doubleEndedList<T>::RemoveFirst()
@@ -272,7 +276,7 @@ template <class T> void doubleEndedList<T>::RemoveFirst()
 
 template <class T> void doubleEndedList<T>::Clear()
 {   
-    // delete all values from collection
+	 // delete all values from collection
     // invoke the list method to do the actual work
 
     list<T>::Clear();

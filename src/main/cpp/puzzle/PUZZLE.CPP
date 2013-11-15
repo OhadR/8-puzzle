@@ -57,6 +57,9 @@ private:
   Point empty_space;
   int Manhatten_Distance;
   int f;    	//f := Manhatten_Distance + number_of_steps
+
+  Puzzle *previous;	//so i can know the actual course!!!
+
 public:
   Puzzle();             		 //constructor
   Puzzle(int *vec);
@@ -74,11 +77,13 @@ public:
   void Change_Right();
 
   int Manhatten(int value,int i,int j);
-  int get_f()	{return  f;}					//inline implementation
-  void Set_f(int new_f)		{f = new_f;}   //inline implementation
+  int get_f()					{return  f;}			//inline implementation
+  void Set_f(int new_f)		{f = new_f;}   		//inline implementation
+  void Set_previous(Puzzle* puzzle_father)	{previous = puzzle_father;} //inline impl.
 
   bool IsGoal();
   void Show_Puzzle();
+  void Show_Course();
 
 };
 
@@ -102,6 +107,7 @@ Puzzle::Puzzle(const Puzzle & puz)
 			matrix[i][j]=puz.matrix[i][j];
 
   empty_space.SetPoint(puz.empty_space.x,puz.empty_space.y);
+  previous = puz.previous;
 }
 
 //gets an one dimentional array and turns it to a 3x3 matrix - the puzzle
@@ -110,7 +116,6 @@ Puzzle::Puzzle(int *vec)
   Manhatten_Distance=0;
   int index=0;
   for(int i=0;i<=2;i++)
-  {
 	 for(int j=0;j<=2;j++)
 	 {
 		if(vec[index]==0)
@@ -121,9 +126,10 @@ Puzzle::Puzzle(int *vec)
 		  Manhatten_Distance+=Manhatten(matrix[i][j],i,j);
 
 	 }
-  }
+
 
   f=Manhatten_Distance;
+  previous = NULL;
 }
 
 
@@ -135,6 +141,7 @@ Puzzle& Puzzle::operator =(const Puzzle& p)
 	Manhatten_Distance = p.Manhatten_Distance;
 	empty_space.SetPoint(p.empty_space.x, p.empty_space.y);
 	f = p.f;
+	previous = p.previous;
 	return *this;
 }
 
@@ -210,8 +217,9 @@ void Puzzle::Show_Puzzle()
   cout<<"Manhatten_Distance: "<<Manhatten_Distance;
   cout<<'\n';
   cout<<"f: "<<f;
-  cout<<'\n';
-  empty_space.show();
+  cout<<'\n'<<'\n';
+//  empty_space.show();
+//  cout<<"previous: "<<previous;
 }
 
 
@@ -230,7 +238,7 @@ bool Puzzle::IsGoal()
   if(Manhatten_Distance==0)
 	 return true;
   else
-    return false;
+	 return false;
 }
 
 
@@ -274,6 +282,13 @@ else
 }
 
 
+void Puzzle::Show_Course()
+{
+	for (	 Puzzle * p=this; p!=NULL ; p=p->previous)
+		p->Show_Puzzle();
+
+}
+
 
 bool ValidateInput(int * vec)
 {
@@ -304,41 +319,13 @@ void InsertToOpenList(doubleEndedList<Puzzle>& OpenList, list<Puzzle>& CloseList
 				//otherwise enter to end-size
 				if (puz.get_f() == father_f)
 					OpenList.Add(puz);
-				else OpenList.AddToEnd(puz);
+				else
+					OpenList.AddToEnd(puz);
 		else
-		{	Puzzle temp = OpenList.ReturnValue(puz);
-			if (temp.get_f() >= puz.get_f())
-				puz.Set_f(temp.get_f());
+		{	Puzzle* temp = OpenList.ReturnValue(puz);
+			if (temp->get_f() >= puz.get_f())
+				temp->Set_f(puz.get_f());
 		}
-	}
-
-}
-
-
-void Generate(doubleEndedList<Puzzle>& OpenList, list<Puzzle>& CloseList,Puzzle& puz)
-{
-	if(puz.Check_Up())
-	{	Puzzle p_copy1(puz);     //make copy of the puz so we can change it
-										 //without changing the origion
-		p_copy1.Change_Up();
-		InsertToOpenList(OpenList, CloseList, p_copy1, puz.get_f());
-		//transfer f of the father so we can compare f's before enter to OL
-	}
-
-	if(puz.Check_Down())
-	{	Puzzle p_copy2(puz);
-		p_copy2.Change_Down();
-		InsertToOpenList(OpenList, CloseList, p_copy2, puz.get_f());
-	}
-	if(puz.Check_Left())
-	{	Puzzle p_copy3(puz);
-		p_copy3.Change_Left();
-		InsertToOpenList(OpenList, CloseList, p_copy3, puz.get_f());
-	}
-	if(puz.Check_Right())
-	{	Puzzle p_copy4(puz);
-		p_copy4.Change_Right();
-		InsertToOpenList(OpenList, CloseList, p_copy4, puz.get_f());
 	}
 }
 
@@ -351,19 +338,54 @@ int A_Star(Puzzle& initial_state, int& counter)
 	doubleEndedList<Puzzle> OpenList;
 	list<Puzzle>				CloseList;
 	OpenList.Add(initial_state);		//enter the 1st component to OL
-	Puzzle puzzle;
 	while(!OpenList.IsEmpty() )
-	{	puzzle = OpenList.RemoveandReturnFirst();
+	{	Puzzle puzzle = OpenList.RemoveandReturnFirst();
 		if( !(puzzle.IsGoal() ) )
 		{
 			counter++;
-			//puzzle.Show_Puzzle();
-			Generate(OpenList, CloseList, puzzle);
-			CloseList.Add(puzzle);
+			Puzzle* temp_puz;		//will hold the allocated address of the puzzle if was entered to OL
+
+			temp_puz = CloseList.Add(puzzle);    //add to CL and getting allocated memory address, so
+													//this puzzle's childs can point at it. that's why i'm
+													//adding to CL before the "if-s"
+
+			if(puzzle.Check_Up())
+			{	Puzzle p_copy1(puzzle);    //make copy of the puz so we can change it
+													//without changing the origion
+
+				p_copy1.Set_previous(temp_puz);
+				p_copy1.Change_Up();
+				//transfer f of the father so we can compare f's before enter to OL:
+				InsertToOpenList(OpenList, CloseList, p_copy1, puzzle.get_f());
+				//if the child was enterd to OL, temp_puz points to its father he'll point at his "dad":
+			}
+
+			if(puzzle.Check_Down())
+			{	Puzzle p_copy2(puzzle);
+				p_copy2.Set_previous(temp_puz);
+				p_copy2.Change_Down();
+				InsertToOpenList(OpenList, CloseList, p_copy2, puzzle.get_f());
+			}
+			if(puzzle.Check_Left())
+			{	Puzzle p_copy3(puzzle);
+				p_copy3.Set_previous(temp_puz);
+				p_copy3.Change_Left();
+				InsertToOpenList(OpenList, CloseList, p_copy3, puzzle.get_f());
+			}
+			if(puzzle.Check_Right())
+			{	Puzzle p_copy4(puzzle);
+				p_copy4.Set_previous(temp_puz);
+				p_copy4.Change_Right();
+				InsertToOpenList(OpenList, CloseList, p_copy4, puzzle.get_f());
+			}
+
 		}
-		else
+		else  		//we found the goal!! now print the course to it
+		{
+			puzzle.Show_Course();
 			return	puzzle.get_f();
-			//return	counter;           //not needed, return by argument
+			//return	counter;           //not needed, return by argument!!!
+		}
 	}
 	assert( OpenList.IsEmpty() );
 }
@@ -382,9 +404,6 @@ void GetDataFromFile()
 		 course_length_sum=0;	//holds the sum of course-lengths
 
 
-   cout<<"index\tcourse length\tnumber of generated puzzles\n";
-	cout<<"=====\t=============\t===========================\n";
-
 	fp = fopen("inputs.txt", "r");
 	while(!feof(fp))              //keep reading strings from file
 	{	fgets(input_line, 30, fp);
@@ -401,8 +420,7 @@ void GetDataFromFile()
 		course_length_sum+=course_length;
 	}
 	cout<<" the average of course-lengths is: "<<( double(course_length_sum)/100)<<"\n";
-	cout<<" the average of generated puzzles is: "<<( double(counter_sum)/100);
-
+	cout<<" the average of generated puzzles is: "<<( double(counter_sum)/100)<<"\n";
 }
 
 
@@ -410,5 +428,9 @@ void GetDataFromFile()
 
 void main()
 {
-  GetDataFromFile();
+	int vec[9] = {2,4,8,3,7,6,1,5,0};
+	Puzzle puzzle(vec);
+	int counter;
+	int length = A_Star(puzzle, counter);
+	cout<<"counter: "<<counter<<"\tlength: "<<length;
 }

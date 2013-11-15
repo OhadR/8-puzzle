@@ -1,0 +1,252 @@
+output #1:
+----------
+
+    0    1    2
+    3    4    5
+    6    7    8
+Manhatten_Distance: 0
+f: 15
+
+
+    3    1    2
+    0    4    5
+    6    7    8
+Manhatten_Distance: 1
+f: 15
+
+
+    3    1    2
+    6    4    5
+    0    7    8
+Manhatten_Distance: 2
+f: 15
+
+
+    3    1    2
+    6    4    5
+    7    0    8
+Manhatten_Distance: 3
+f: 15
+
+
+    3    1    2
+    6    0    5
+    7    4    8
+Manhatten_Distance: 4
+f: 15
+
+
+    3    1    2
+    6    5    0
+    7    4    8
+Manhatten_Distance: 5
+f: 15
+
+
+    3    1    2
+    6    5    8
+    7    4    0
+Manhatten_Distance: 6
+f: 15
+
+
+    3    1    2
+    6    5    8
+    7    0    4
+Manhatten_Distance: 7
+f: 15
+
+
+    3    1    2
+    6    5    8
+    0    7    4
+Manhatten_Distance: 6
+f: 13
+
+
+    3    1    2
+    0    5    8
+    6    7    4
+Manhatten_Distance: 5
+f: 11
+
+
+    3    1    2
+    5    0    8
+    6    7    4
+Manhatten_Distance: 6
+f: 11
+
+
+    3    1    2
+    5    8    0
+    6    7    4
+Manhatten_Distance: 7
+f: 11
+
+
+    3    1    0
+    5    8    2
+    6    7    4
+Manhatten_Distance: 8
+f: 11
+
+
+    3    0    1
+    5    8    2
+    6    7    4
+Manhatten_Distance: 9
+f: 11
+
+
+    0    3    1
+    5    8    2
+    6    7    4
+Manhatten_Distance: 10
+f: 11
+
+
+    5    3    1
+    0    8    2
+    6    7    4
+Manhatten_Distance: 11
+f: 11
+
+
+output #2:
+----------
+
+
+    0    1    2
+    3    4    5
+    6    7    8
+Manhatten_Distance: 0
+f: 18
+
+
+    1    0    2
+    3    4    5
+    6    7    8
+Manhatten_Distance: 1
+f: 18
+
+
+    1    4    2
+    3    0    5
+    6    7    8
+Manhatten_Distance: 2
+f: 18
+
+
+    1    4    2
+    3    5    0
+    6    7    8
+Manhatten_Distance: 3
+f: 18
+
+
+    1    4    0
+    3    5    2
+    6    7    8
+Manhatten_Distance: 4
+f: 18
+
+
+    1    0    4
+    3    5    2
+    6    7    8
+Manhatten_Distance: 5
+f: 18
+
+
+    1    5    4
+    3    0    2
+    6    7    8
+Manhatten_Distance: 6
+f: 18
+
+
+    1    5    4
+    3    7    2
+    6    0    8
+Manhatten_Distance: 7
+f: 18
+
+
+    1    5    4
+    3    7    2
+    0    6    8
+Manhatten_Distance: 8
+f: 18
+
+
+    1    5    4
+    0    7    2
+    3    6    8
+Manhatten_Distance: 9
+f: 18
+
+
+    0    5    4
+    1    7    2
+    3    6    8
+Manhatten_Distance: 10
+f: 18
+
+
+    5    0    4
+    1    7    2
+    3    6    8
+Manhatten_Distance: 11
+f: 18
+
+
+    5    4    0
+    1    7    2
+    3    6    8
+Manhatten_Distance: 10
+f: 16
+
+
+    5    4    2
+    1    7    0
+    3    6    8
+Manhatten_Distance: 9
+f: 14
+
+
+    5    4    2
+    1    0    7
+    3    6    8
+Manhatten_Distance: 10
+f: 14
+
+
+    5    0    2
+    1    4    7
+    3    6    8
+Manhatten_Distance: 9
+f: 12
+
+
+    0    5    2
+    1    4    7
+    3    6    8
+Manhatten_Distance: 8
+f: 10
+
+
+    1    5    2
+    0    4    7
+    3    6    8
+Manhatten_Distance: 7
+f: 8
+
+
+    1    5    2
+    4    0    7
+    3    6    8
+Manhatten_Distance: 8
+f: 8
+
+counter: 415    length: 18
