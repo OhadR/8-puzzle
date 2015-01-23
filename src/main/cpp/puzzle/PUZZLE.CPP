@@ -1,5 +1,5 @@
 
-#include <iostream.h>
+#include <iostream>
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
@@ -8,6 +8,7 @@
 
 /*enum bool {false=0, true=1};   declared in "list.h"   */
 
+using namespace std;
 
 /*-------------------------------------------
 	class Point, we use it for locating the
@@ -159,9 +160,9 @@ bool operator ==(const Puzzle& p1, const Puzzle& p2)
 
 void Puzzle::Change_Up()
 {
-  f=(f- Manhatten_Distance);
+  f -= Manhatten_Distance;
   Manhatten_Distance=(Manhatten_Distance-(Manhatten(  matrix[empty_space.x+1][empty_space.y],empty_space.x+1,empty_space.y))+Manhatten(  matrix[empty_space.x+1][empty_space.y],empty_space.x,empty_space.y));
-  f=(f+Manhatten_Distance+1);
+  f += Manhatten_Distance+1;
   matrix[empty_space.x][empty_space.y]=matrix[( (empty_space.x )+1)][empty_space.y];
   matrix[( (empty_space.x )+1)][empty_space.y]=0;
   empty_space.SetPoint(((empty_space.x)+1),empty_space.y);
@@ -170,9 +171,9 @@ void Puzzle::Change_Up()
 
 void Puzzle::Change_Down()
 {
-  f=(f- Manhatten_Distance);
+  f -= Manhatten_Distance;
   Manhatten_Distance=(Manhatten_Distance-(Manhatten(  matrix[empty_space.x-1][empty_space.y],empty_space.x-1,empty_space.y))+Manhatten(  matrix[empty_space.x-1][empty_space.y],empty_space.x,empty_space.y));
-  f=(f+Manhatten_Distance+1);
+  f += Manhatten_Distance+1;
   matrix[empty_space.x][empty_space.y]=matrix[( (empty_space.x )-1)][empty_space.y];
   matrix[( (empty_space.x )-1)][empty_space.y]=0;
   empty_space.SetPoint(((empty_space.x)-1),empty_space.y);
@@ -181,9 +182,9 @@ void Puzzle::Change_Down()
 
 void Puzzle::Change_Right()
 {
-  f=(f- Manhatten_Distance);
+  f -= Manhatten_Distance;
   Manhatten_Distance=(Manhatten_Distance-(Manhatten(  matrix[empty_space.x][empty_space.y-1],empty_space.x,empty_space.y-1))+Manhatten(  matrix[empty_space.x][empty_space.y-1],empty_space.x,empty_space.y));
-  f=(f+Manhatten_Distance+1);
+  f += Manhatten_Distance+1;
   matrix[empty_space.x][empty_space.y]=matrix[empty_space.x][empty_space.y-1];
   matrix[empty_space.x][empty_space.y-1]=0;
   empty_space.SetPoint(empty_space.x,((empty_space.y)-1));
@@ -192,9 +193,9 @@ void Puzzle::Change_Right()
 
 void Puzzle::Change_Left()
 {
-  f=(f- Manhatten_Distance);
+  f -= Manhatten_Distance;
   Manhatten_Distance=(Manhatten_Distance-(Manhatten(  matrix[empty_space.x][empty_space.y+1],empty_space.x,empty_space.y+1))+Manhatten(  matrix[empty_space.x][empty_space.y+1],empty_space.x,empty_space.y));
-  f=(f+Manhatten_Distance+1);
+  f += Manhatten_Distance+1;
   matrix[empty_space.x][empty_space.y]=matrix[empty_space.x][empty_space.y+1];
   matrix[empty_space.x][empty_space.y+1]=0;
   empty_space.SetPoint(empty_space.x,((empty_space.y)+1));
@@ -428,6 +429,8 @@ void GetDataFromFile()
 
 void main()
 {
+	//GetDataFromFile();
+
 	int vec[9] = {2,4,8,3,7,6,1,5,0};
 	Puzzle puzzle(vec);
 	int counter;
