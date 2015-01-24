@@ -415,8 +415,8 @@ void GetDataFromFile()
 			int_array[i++] = atoi(string2);
 		assert(ValidateInput(int_array));  //check input!!!
 		Puzzle created_puzzle(int_array);
-		course_length = A_Star(created_puzzle, counter);
-		cout<<index<<".\t"<<course_length<<"\t\t"<<counter<<"\n";
+		course_length = A_Star( created_puzzle, counter );
+		cout << index << ".\t" << course_length << "\t\t" << counter << "\n";
 		counter_sum+=counter;
 		course_length_sum+=course_length;
 	}
@@ -435,5 +435,5 @@ void main()
 	Puzzle puzzle(vec);
 	int counter;
 	int length = A_Star(puzzle, counter);
-	cout<<"counter: "<<counter<<"\tlength: "<<length;
+	cout << "counter: "<< counter << "\tlength: "<< length;
 }
